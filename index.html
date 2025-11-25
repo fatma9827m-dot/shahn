@@ -1,0 +1,436 @@
+
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shahn | عالم اللاعبين الحقيقي</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    
+    <link rel="stylesheet" href="index.css">
+<script type="importmap">
+{
+  "imports": {
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.25.0"
+  }
+}
+</script>
+</head>
+<body class="min-h-screen antialiased theme-space">
+
+    <!-- Cinematic Intro -->
+    <div id="intro-sequence" class="intro-v5">
+        <div class="intro-v5-container">
+            <div class="intro-v5-grid"></div>
+            <div class="intro-v5-vignette"></div>
+            <div class="intro-v5-lines">
+                <div class="intro-v5-line"></div>
+                <div class="intro-v5-line"></div>
+                <div class="intro-v5-line"></div>
+            </div>
+            <div class="intro-v5-content">
+                <h1 id="intro-title" data-text="Shahn">Shahn</h1>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login & Register Container -->
+    <div id="login-container" class="hidden fixed inset-0 bg-[#0a192f] z-50 flex flex-col items-center justify-center p-4 sm:p-8 animated-bg">
+        <div class="w-full max-w-sm text-center">
+            <h1 class="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-amber-500 mb-4"> Shahn | شحن </h1>
+            <p class="text-secondary mb-8">سجّل دخولك لتبدأ رحلة شحن الألعاب</p>
+            <div class="glass-card rounded-2xl p-6 sm:p-8">
+                <div class="mb-4 flex justify-center border-b border-gray-600">
+                    <button id="show-login-tab" class="px-6 py-2 font-bold text-lg border-b-2 border-yellow-400 text-primary">دخول</button>
+                    <button id="show-register-tab" class="px-6 py-2 font-bold text-lg border-b-2 border-transparent text-gray-400">حساب جديد</button>
+                </div>
+                <div id="auth-forms">
+                    <!-- Login Form -->
+                    <form id="login-form" class="space-y-6">
+                        <input name="email" type="email" placeholder="البريد الإلكتروني" class="w-full bg-gray-700/50 border-2 border-gray-600 rounded-lg p-3 text-center focus:ring-yellow-500 focus:border-yellow-500" required>
+                        <div class="relative">
+                            <input name="password" type="password" placeholder="كلمة المرور" class="w-full bg-gray-700/50 border-2 border-gray-600 rounded-lg p-3 text-center focus:ring-yellow-500 focus:border-yellow-500 pl-10" required>
+                            <button type="button" class="absolute inset-y-0 left-0 px-3 flex items-center text-gray-400 toggle-password">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <button type="submit" class="w-full btn btn-primary btn-press-effect">
+                            <span class="btn-text">تسجيل الدخول</span>
+                            <i class="fas fa-spinner fa-spin hidden"></i>
+                        </button>
+                    </form>
+                    <!-- Register Form -->
+                    <form id="register-form" class="hidden space-y-4">
+                        <input name="username" type="text" placeholder="اسم المستخدم" class="w-full bg-gray-700/50 border-2 border-gray-600 rounded-lg p-3 text-center focus:ring-yellow-500 focus:border-yellow-500" required>
+                        <input name="email" type="email" placeholder="البريد الإلكتروني" class="w-full bg-gray-700/50 border-2 border-gray-600 rounded-lg p-3 text-center focus:ring-yellow-500 focus:border-yellow-500" required>
+                        <div class="relative">
+                            <input name="password" type="password" placeholder="كلمة المرور (6 أحرف على الأقل)" class="w-full bg-gray-700/50 border-2 border-gray-600 rounded-lg p-3 text-center focus:ring-yellow-500 focus:border-yellow-500 pl-10" required>
+                             <button type="button" class="absolute inset-y-0 left-0 px-3 flex items-center text-gray-400 toggle-password">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <button type="submit" class="w-full btn btn-success btn-press-effect">
+                             <span class="btn-text">إنشاء حساب</span>
+                             <i class="fas fa-spinner fa-spin hidden"></i>
+                        </button>
+                    </form>
+                </div>
+                 <p class="text-red-600 mt-4 text-sm font-bold">تذكر بريدك وكلمه السر جيدا عند فقدانهما لم تستطيع تسجيل الدخول</p>
+                 <p id="auth-error" class="text-red-500 mt-2 h-5"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- App Loader -->
+    <div id="app-loader" class="hidden fixed inset-0 bg-[var(--bg-from)] z-[100] flex flex-col items-center justify-center">
+        <div class="w-16 h-16 border-4 border-t-transparent border-yellow-400 rounded-full animate-spin"></div>
+        <p class="mt-4 text-lg text-primary">جاري تحميل عالم Shahn...</p>
+    </div>
+    
+    <!-- Connection Error Overlay -->
+    <div id="connection-error-overlay" class="hidden fixed inset-0 bg-red-900/90 backdrop-blur-sm z-[200] flex flex-col items-center justify-center p-8 text-center text-white">
+        <i class="fas fa-wifi text-8xl mb-6 text-red-400"></i>
+        <h1 class="text-4xl font-black mb-4">فشل الاتصال</h1>
+        <p class="text-lg max-w-md mb-8">تعذر الوصول إلى الخادم. يرجى التحقق من اتصالك بالإنترنت والمحاولة مرة أخرى.</p>
+        <button id="connection-error-retry-btn" class="admin-btn admin-btn-primary">إعادة المحاولة</button>
+    </div>
+
+
+    <!-- Banned Screen -->
+    <div id="banned-screen" class="hidden fixed inset-0 bg-red-900/90 z-[200] flex flex-col items-center justify-center p-8 text-center text-white">
+        <i class="fas fa-gavel text-8xl mb-6 text-red-400"></i>
+        <h1 class="text-4xl font-black mb-4">تم حظر حسابك</h1>
+        <p class="text-lg max-w-md">لقد تم حظر هذا الحساب بسبب انتهاك شروط الخدمة. إذا كنت تعتقد أن هذا خطأ, يرجى التواصل مع الدعم الفني.</p>
+    </div>
+
+    <!-- Main App Structure (hidden until loaded) -->
+    <div id="app-container" class="hidden">
+        <!-- Prize Animation Layer -->
+        <div id="prize-animation-layer" class="fixed inset-0 z-[100] pointer-events-none"></div>
+
+        <!-- Admin Broadcast Banner -->
+        <div id="admin-broadcast-banner" class="hidden fixed top-0 left-0 w-full bg-yellow-500 text-black font-bold p-2 text-center z-50 shadow-lg">
+            <i class="fas fa-bullhorn mr-2 animate-pulse"></i> <span id="admin-broadcast-message"></span>
+        </div>
+
+        <!-- Navbar -->
+        <nav class="fixed top-0 left-0 w-full bg-black/30 backdrop-blur-lg z-40 border-b border-white/10" id="main-nav">
+            <div class="container mx-auto max-w-6xl px-4">
+                <div class="flex justify-between items-center h-16">
+                    <div class="flex items-center gap-3">
+                        <button id="profile-btn" class="btn-press-effect relative">
+                            <img id="nav-avatar" src="" class="w-10 h-10 rounded-full border-2 border-gray-500 hover:border-yellow-400 transition object-cover">
+                        </button>
+                        <div>
+                             <div class="flex items-center gap-2">
+                                <div id="connection-status-indicator" class="w-3 h-3 rounded-full bg-yellow-500 transition-colors" title="جاري الاتصال..."></div>
+                                <p id="nav-username" class="font-bold text-sm text-primary"></p>
+                                <p id="nav-level" class="text-xs font-bold bg-yellow-400 text-black px-1.5 py-0.5 rounded-md"></p>
+                             </div>
+                             <div class="w-full mt-1">
+                                <div class="xp-bar"><div id="nav-xp-bar" class="xp-bar-fill" style="width: 0%;"></div></div>
+                             </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 md:gap-4">
+                        <button id="news-btn" title="آخر الأخبار" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center btn-press-effect"><i class="fas fa-newspaper text-xl"></i></button>
+                        <button id="admin-panel-btn" title="لوحة التحكم" class="hidden w-10 h-10 bg-red-600/50 text-red-300 rounded-full flex items-center justify-center btn-press-effect"><i class="fas fa-user-shield text-xl"></i></button>
+                        <button id="notifications-btn" title="الإشعارات" class="relative w-10 h-10 bg-white/10 rounded-full flex items-center justify-center btn-press-effect">
+                            <i class="fas fa-bell text-xl"></i>
+                            <span id="notifications-count" class="hidden absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center"></span>
+                        </button>
+                        <button id="leaderboard-btn" title="لوحة الصدارة" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center btn-press-effect"><i class="fas fa-trophy text-xl"></i></button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Container -->
+        <main id="main-view" class="container mx-auto p-4 md:p-8 max-w-4xl pb-40 pt-24">
+            <header class="text-center mb-8">
+                 <h1 class="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-amber-500"> Shahn | شحن </h1>
+                 <p class="text-secondary mt-2">منصة الشحن الحقيقية للاعبين</p>
+                 <div id="activity-ticker" class="mt-4 text-sm text-secondary h-12 flex items-center justify-center p-2 border-2 border-yellow-400/50 rounded-lg glass-card overflow-hidden relative">
+                    <span id="activity-ticker-span" class="absolute whitespace-nowrap transition-transform duration-500 ease-in-out opacity-0"></span>
+                </div>
+            </header>
+
+            <section class="glass-card rounded-2xl p-6 mb-8 shadow-lg">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div class="text-center"><h2 class="text-lg text-secondary">نقاطك الحالية</h2><div class="flex items-center gap-2"><span id="points-counter" class="text-4xl font-bold text-accent">0</span><i class="fa-solid fa-coins text-3xl text-accent"></i></div></div>
+                    <div class="flex gap-4 flex-wrap justify-center">
+                         <button id="quiz-rooms-btn" class="btn btn-secondary btn-press-effect"><i class="fa-solid fa-brain mr-2"></i> غرف الأسئلة</button>
+                         <button id="watch-ad-btn" class="btn btn-primary btn-press-effect"><i class="fa-solid fa-play-circle mr-2"></i> اكسب نقاط</button>
+                    </div>
+                </div>
+            </section>
+             <section class="glass-card rounded-xl p-6 mb-8">
+                <h4 class="font-bold text-lg mb-2 text-center">🎁 كود الهدية</h4>
+                <form id="promo-code-form" class="flex gap-2 max-w-md mx-auto">
+                    <input name="promo-code-input" type="text" placeholder="أدخل الكود هنا" class="flex-grow bg-gray-800 p-2 rounded-lg text-center uppercase" required>
+                    <button type="submit" class="btn btn-success">تفعيل</button>
+                </form>
+             </section>
+            
+            <!-- Main Content Area -->
+            <div id="main-content-area">
+                <section class="mb-8">
+                    <label for="game-selector" class="block text-center mb-4 text-xl font-bold text-primary">اختر لعبتك المفضلة</label>
+                    <select id="game-selector" class="w-full bg-gray-800 border-2 border-gray-600 text-primary text-lg rounded-lg focus:ring-yellow-500 focus:border-yellow-500 p-3 appearance-none text-center"></select>
+                </section>
+                <div id="game-header" class="hidden items-center gap-4 mb-6 p-4 glass-card rounded-xl">
+                     <img id="game-logo" src="" alt="Game Logo" class="w-16 h-16"><h2 id="game-name" class="text-3xl font-bold text-primary"></h2>
+                </div>
+                <div id="packages-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </div>
+        </main>
+        
+        <!-- Floating Action Buttons -->
+        <!-- Right side FABs -->
+        <div class="fixed bottom-24 right-4 z-[90] flex flex-col gap-3">
+             <button id="ai-chat-btn" title="مساعد Shahn الذكي" class="w-14 h-14 btn btn-primary !rounded-full !p-0 flex items-center justify-center btn-press-effect shadow-lg"><i class="fas fa-robot text-2xl"></i></button>
+             <button id="global-chat-btn" title="الدردشة العالمية" class="w-14 h-14 btn btn-success !rounded-full !p-0 flex items-center justify-center btn-press-effect shadow-lg"><i class="fas fa-comments text-2xl"></i></button>
+        </div>
+        <!-- Left side FAB -->
+        <div class="fixed bottom-24 left-4 z-[90]">
+            <button id="quiz-chat-btn" title="دردشة الغرفة" class="hidden w-14 h-14 btn btn-secondary !rounded-full !p-0 flex items-center justify-center btn-press-effect shadow-lg">
+                <i class="fas fa-comments text-2xl"></i>
+                <span id="quiz-chat-unread-count" class="hidden absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center border-2 border-gray-800"></span>
+            </button>
+        </div>
+    </div>
+    
+    <!-- Player Modals -->
+    <div id="leaderboard-modal" class="modal-base modal-inactive fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="glass-card rounded-2xl w-full max-w-2xl text-primary overflow-hidden">
+            <div class="p-6 border-b border-white/10">
+                <div class="flex justify-between items-center">
+                    <h3 class="font-bold text-xl"><i class="fas fa-trophy mr-2 text-yellow-400"></i>لوحة الصدارة</h3>
+                    <button class="close-modal-btn text-2xl">&times;</button>
+                </div>
+                <div class="mt-4 flex justify-center border-b border-gray-600">
+                    <button id="leaderboard-tab-points" class="px-6 py-2 font-bold text-lg border-b-2 border-yellow-400 text-primary">أعلى النقاط</button>
+                    <button id="leaderboard-tab-quiz" class="px-6 py-2 font-bold text-lg border-b-2 border-transparent text-gray-400">ملوك الكويز</button>
+                </div>
+            </div>
+            <div class="p-6 max-h-[70vh] overflow-y-auto">
+                <div id="leaderboard-list">
+                    <div class="text-center p-8"><i class="fas fa-spinner fa-spin text-4xl text-white"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="playerid-modal" class="modal-base modal-inactive fixed inset-0 bg-black/80 backdrop-blur-sm z-60 flex items-center justify-center p-4">
+         <div class="glass-card rounded-2xl w-full max-w-sm text-primary p-6 text-center">
+             <button class="close-modal-btn absolute top-4 left-4 text-2xl">&times;</button>
+             <h3 class="font-bold text-xl mb-2">إدخال ID اللاعب</h3>
+             <p class="text-secondary mb-4">لشحن باقة <span id="playerid-pkg-name" class="font-bold text-accent"></span> لـ <span id="playerid-game-name" class="font-bold"></span></p>
+             <form id="playerid-form">
+                <input id="playerid-input" type="text" placeholder="أدخل ID هنا" class="w-full bg-gray-700/50 border-2 border-gray-600 rounded-lg p-3 text-center focus:ring-yellow-500 focus:border-yellow-500 mb-4" required>
+                <button type="submit" class="w-full btn btn-success btn-press-effect">
+                    <span class="btn-text">تأكيد الشحن</span>
+                    <i class="fas fa-spinner fa-spin hidden"></i>
+                </button>
+             </form>
+         </div>
+    </div>
+    <div id="ad-timer-modal" class="modal-base modal-inactive fixed inset-0 bg-black/90 backdrop-blur-sm z-[60] flex flex-col items-center justify-center p-4 text-center text-white">
+        <div class="w-32 h-32 border-8 border-yellow-400 rounded-full flex items-center justify-center mb-6">
+            <span id="ad-timer-countdown" class="text-6xl font-black">15</span>
+        </div>
+        <h3 class="text-3xl font-bold mb-2">جاري عرض الإعلان...</h3>
+        <p class="text-lg text-gray-300">سيتم إضافة النقاط بعد انتهاء العداد. لا تغلق هذه الصفحة.</p>
+    </div>
+    <div id="notifications-modal" class="modal-base modal-inactive fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="glass-card rounded-2xl w-full max-w-md text-primary overflow-hidden">
+            <div class="p-4 border-b border-white/10 flex justify-between items-center"><h3 class="font-bold text-xl"><i class="fas fa-bell mr-2 text-yellow-400"></i>الإشعارات</h3><button class="close-modal-btn text-2xl">&times;</button></div>
+            <div id="notifications-list" class="p-4 space-y-3 max-h-[60vh] overflow-y-auto"></div>
+        </div>
+    </div>
+    <div id="news-modal" class="modal-base modal-inactive fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+         <div class="glass-card rounded-2xl w-full max-w-2xl text-primary overflow-hidden">
+            <div class="p-4 border-b border-white/10 flex justify-between items-center"><h3 class="font-bold text-xl"><i class="fas fa-newspaper mr-2 text-yellow-400"></i>آخر الأخبار</h3><button class="close-modal-btn text-2xl">&times;</button></div>
+            <div id="news-list" class="p-6 space-y-4 max-h-[70vh] overflow-y-auto"></div>
+        </div>
+    </div>
+    
+    <!-- Friends Modal -->
+    <div id="friends-modal" class="modal-base modal-inactive fixed inset-0 bg-black/80 backdrop-blur-sm z-[70] flex items-center justify-center p-4">
+        <div class="glass-card rounded-2xl w-full max-w-lg text-primary overflow-hidden">
+            <div class="p-4 border-b border-white/10 flex justify-between items-center">
+                <h3 class="font-bold text-xl"><i class="fas fa-users mr-2 text-cyan-400"></i>الأصدقاء</h3>
+                <button class="close-modal-btn text-2xl">&times;</button>
+            </div>
+            <div class="border-b border-gray-600 flex">
+                <button class="friend-tab-btn active px-4 py-2 border-b-2 font-semibold" data-tab="list">قائمتي</button>
+                <button class="friend-tab-btn px-4 py-2 border-b-2 border-transparent text-gray-400 font-semibold relative" data-tab="requests">
+                    الطلبات <span id="friend-requests-count" class="hidden absolute top-1 right-1 w-4 h-4 text-xs bg-red-500 rounded-full"></span>
+                </button>
+                <button class="friend-tab-btn px-4 py-2 border-b-2 border-transparent text-gray-400 font-semibold" data-tab="search">بحث</button>
+            </div>
+            <div class="p-4 max-h-[60vh] overflow-y-auto">
+                <div id="friends-tab-content-list"></div>
+                <div id="friends-tab-content-requests" class="hidden"></div>
+                <div id="friends-tab-content-search" class="hidden">
+                    <div class="flex gap-2 mb-4">
+                        <input id="friend-search-input" type="text" placeholder="ابحث بالاسم أو ID القصير..." class="admin-input">
+                        <button id="friend-search-btn" class="admin-btn admin-btn-primary">بحث</button>
+                    </div>
+                    <div id="friend-search-results"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Fullscreen Views -->
+    <div id="profile-view" class="fullscreen-view view-inactive fixed inset-0 animated-bg z-50 overflow-y-auto">
+        <!-- Content will be injected by profileFunctions.initProfile -->
+    </div>
+    <div id="quiz-lobby-view" class="fullscreen-view view-inactive fixed inset-0 animated-bg z-50 flex flex-col items-center p-4 overflow-y-auto"></div>
+    <div id="quiz-game-view" class="fullscreen-view view-inactive fixed inset-0 z-50 flex flex-col overflow-y-auto transition-all duration-500"></div>
+    <div id="proofs-view" class="fullscreen-view view-inactive fixed inset-0 animated-bg z-[70] flex flex-col items-center p-4 overflow-y-auto">
+        <div class="container mx-auto max-w-4xl w-full">
+            <header class="flex justify-between items-center mb-6 pt-16">
+                <h2 class="text-3xl font-bold"><i class="fas fa-shield-alt mr-2 text-green-400"></i> إثباتات الشحن لـ <span id="proofs-view-username" class="text-accent"></span></h2>
+                <button class="close-fullscreen-btn text-3xl">&times;</button>
+            </header>
+            <main id="proofs-view-content" class="space-y-4">
+                <!-- Proofs will be rendered here -->
+            </main>
+        </div>
+    </div>
+
+    <div id="ai-chat-view" class="fullscreen-view view-inactive fixed inset-0 animated-bg z-50 flex flex-col text-primary">
+        <div class="container mx-auto max-w-2xl w-full h-full flex flex-col p-4">
+            <header class="flex-shrink-0 flex justify-between items-center mb-4 pt-12">
+                <h2 class="text-2xl font-bold"><i class="fas fa-robot text-purple-400 mr-2"></i>مساعد Shahn الذكي</h2>
+                <button class="close-fullscreen-btn text-3xl">&times;</button>
+            </header>
+            <main class="glass-card rounded-2xl flex-grow flex flex-col overflow-hidden">
+                <div id="ai-chat-messages" class="flex-grow p-4 overflow-y-auto"></div>
+                <footer class="flex-shrink-0 p-3 bg-black/30 border-t border-white/10">
+                    <form id="ai-chat-form" class="flex items-center gap-2">
+                        <input id="ai-chat-input" type="text" placeholder="اسأل عن أي شيء يخص التطبيق..." class="flex-grow bg-gray-900/50 p-3 rounded-full text-sm text-white focus:ring-2 focus:ring-purple-500 focus:outline-none">
+                        <button type="submit" class="w-12 h-12 btn btn-primary !rounded-full !p-0 flex items-center justify-center flex-shrink-0 btn-press-effect"><i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </footer>
+            </main>
+        </div>
+    </div>
+
+    <div id="global-chat-view" class="fullscreen-view view-inactive fixed inset-0 animated-bg z-50 flex flex-col text-primary">
+         <div class="container mx-auto max-w-2xl w-full h-full flex flex-col p-4">
+            <header class="flex-shrink-0 flex justify-between items-center mb-4 pt-12">
+                <h2 class="text-2xl font-bold"><i class="fas fa-globe-americas mr-2 text-cyan-400"></i>الدردشة العالمية</h2>
+                <button class="close-fullscreen-btn text-3xl">&times;</button>
+            </header>
+            <main class="glass-card rounded-2xl flex-grow flex flex-col overflow-hidden">
+                 <div id="global-chat-messages" class="flex-grow p-4 overflow-y-auto text-sm"></div>
+                 <footer class="flex-shrink-0 p-3 bg-black/30 border-t border-white/10">
+                     <form id="global-chat-form" class="flex items-center gap-2">
+                         <input id="global-chat-input" type="text" maxlength="200" placeholder="اكتب رسالتك هنا..." class="flex-grow bg-gray-900/50 p-3 rounded-full text-sm text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none">
+                         <button type="submit" class="w-12 h-12 btn btn-success !rounded-full !p-0 flex items-center justify-center flex-shrink-0 btn-press-effect"><i class="fas fa-paper-plane"></i></button>
+                     </form>
+                 </footer>
+            </main>
+        </div>
+    </div>
+    
+    <!-- Private Chat View -->
+    <div id="private-chat-view" class="fullscreen-view view-inactive fixed inset-0 animated-bg z-50 flex flex-col text-primary">
+         <div class="container mx-auto max-w-2xl w-full h-full flex flex-col p-4">
+            <header class="flex-shrink-0 flex justify-between items-center mb-4 pt-12">
+                <div class="flex items-center gap-3">
+                    <img id="private-chat-header-avatar" src="" class="w-10 h-10 rounded-full object-cover border-2 border-gray-500">
+                    <div>
+                        <h2 id="private-chat-header-title" class="text-xl font-bold">اسم الصديق</h2>
+                        <span id="private-chat-header-status" class="text-xs text-gray-400 block">جاري التحقق...</span>
+                    </div>
+                </div>
+                <button class="close-fullscreen-btn text-3xl">&times;</button>
+            </header>
+            <main class="glass-card rounded-2xl flex-grow flex flex-col overflow-hidden">
+                 <div id="private-chat-messages" class="flex-grow p-4 overflow-y-auto text-sm flex flex-col gap-2"></div>
+                 <footer class="flex-shrink-0 p-3 bg-black/30 border-t border-white/10">
+                     <form id="private-chat-form" class="flex items-center gap-2">
+                         <input id="private-chat-input" type="text" maxlength="200" placeholder="اكتب رسالة خاصة..." class="flex-grow bg-gray-900/50 p-3 rounded-full text-sm text-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                         <button type="submit" class="w-12 h-12 btn btn-primary !rounded-full !p-0 flex items-center justify-center flex-shrink-0 btn-press-effect"><i class="fas fa-paper-plane"></i></button>
+                     </form>
+                 </footer>
+            </main>
+        </div>
+    </div>
+    
+    <!-- Quiz Chat Panel -->
+    <div id="quiz-chat-panel" class="fullscreen-view view-inactive fixed inset-0 z-[55] flex">
+        <div class="quiz-chat-backdrop close-fullscreen-btn flex-grow bg-black/60"></div>
+        <div class="w-full max-w-sm h-full bg-[#111827] flex flex-col text-primary shadow-2xl quiz-chat-panel-content">
+            <header class="flex-shrink-0 flex justify-between items-center p-4 border-b border-white/10">
+                <h2 class="text-xl font-bold"><i class="fas fa-comments text-purple-400 mr-2"></i>دردشة الغرفة</h2>
+                <button class="close-fullscreen-btn text-2xl">&times;</button>
+            </header>
+            <main class="flex-grow flex flex-col overflow-hidden">
+                 <div id="quiz-room-chat-messages" class="flex-grow p-4 overflow-y-auto text-sm"></div>
+                 <footer class="flex-shrink-0 p-3 bg-black/30 border-t border-white/10">
+                     <form id="quiz-room-chat-form" class="flex items-center gap-2">
+                         <input id="quiz-room-chat-input" type="text" maxlength="200" placeholder="اكتب رسالتك هنا..." class="flex-grow bg-gray-800 p-3 rounded-full text-sm text-white focus:ring-2 focus:ring-purple-500 focus:outline-none">
+                         <button type="submit" class="w-12 h-12 btn btn-primary !rounded-full !p-0 flex items-center justify-center flex-shrink-0 btn-press-effect"><i class="fas fa-paper-plane"></i></button>
+                     </form>
+                 </footer>
+            </main>
+        </div>
+    </div>
+    
+    <!-- Admin Panel -->
+    <div id="admin-panel-view" class="fullscreen-view view-inactive fixed inset-0 z-50 flex flex-col md:flex-row">
+        <div id="admin-sidebar-overlay" class="fixed inset-0 bg-black/50 z-10 hidden md:hidden"></div>
+        <aside id="admin-sidebar" class="w-64 bg-admin-bg-secondary p-4 flex-shrink-0 flex flex-col overflow-y-auto fixed inset-y-0 right-0 md:relative md:right-auto h-full z-20 transform translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
+             <div class="flex justify-between items-center mb-6 flex-shrink-0">
+                <h2 class="text-xl font-bold"><i class="fas fa-user-shield text-admin-accent mr-2"></i>لوحة التحكم</h2>
+                <button id="admin-sidebar-close-btn" class="text-2xl md:hidden">&times;</button>
+            </div>
+            <nav id="admin-sidebar-nav" class="space-y-2"></nav>
+        </aside>
+        <div id="admin-content-wrapper" class="flex-grow flex flex-col w-full md:w-[calc(100%-16rem)] overflow-y-auto">
+            <header class="sticky top-0 bg-admin-bg-primary/80 backdrop-blur-sm z-10 flex items-center justify-between p-4 border-b border-admin-border md:hidden">
+                <button id="admin-sidebar-open-btn" class="text-xl"><i class="fas fa-bars"></i></button>
+                <h3 id="admin-mobile-header-title" class="font-bold">لوحة التحكم</h3>
+                <button class="close-fullscreen-btn text-2xl">&times;</button>
+            </header>
+            <main id="admin-content" class="p-4 md:p-8"></main>
+        </div>
+    </div>
+
+    <!-- Generic Modal -->
+    <div id="generic-modal" class="modal-base modal-inactive fixed inset-0 bg-black/80 backdrop-blur-sm z-[80] flex items-center justify-center p-4">
+        <div id="generic-modal-content" class="rounded-xl w-full max-w-lg text-white p-6 relative max-h-[90vh] overflow-y-auto" style="background-color: var(--admin-bg-secondary);"></div>
+    </div>
+    
+    <!-- Container to generate share image -->
+    <div id="share-image-container" class="fixed -left-[9999px] top-0 z-0"></div>
+
+    <!-- Toasts & Sounds -->
+    <div id="toast-container"></div>
+    <div id="popup-notification-container" class="fixed top-4 right-4 z-[100] w-full max-w-sm space-y-3"></div>
+
+
+<script type="module" src="./index.tsx"></script>
+</body>
+</html>
