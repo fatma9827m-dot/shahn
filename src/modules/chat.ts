@@ -191,10 +191,12 @@ export const chatFunctions = {
 
             const listener = statusRef.on('value', (snapshot: any) => {
                 const status = snapshot.val();
+                // STRICT ONLINE CHECK
                 if (status && status.state === 'online') {
                     statusEl.textContent = '🟢 متصل الآن';
                     statusEl.className = 'text-xs text-green-400 font-bold block';
                 } else {
+                    // Only calculate time if state is NOT online
                     if (status && status.last_changed) {
                         const date = new Date(status.last_changed);
                         const now = new Date();

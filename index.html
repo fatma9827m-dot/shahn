@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -335,18 +334,19 @@
         </div>
     </div>
 
+    <!-- Global Chat View - Fullscreen -->
     <div id="global-chat-view" class="fullscreen-view view-inactive fixed inset-0 animated-bg z-50 flex flex-col text-primary">
-         <div class="container mx-auto max-w-2xl w-full h-full flex flex-col p-4">
-            <header class="flex-shrink-0 flex justify-between items-center mb-4 pt-12">
+         <div class="w-full h-full flex flex-col">
+            <header class="flex-shrink-0 flex justify-between items-center p-4 pt-8 bg-black/40 border-b border-white/10 shadow-lg z-10 backdrop-blur-md">
                 <h2 class="text-2xl font-bold"><i class="fas fa-globe-americas mr-2 text-cyan-400"></i>الدردشة العالمية</h2>
-                <button class="close-fullscreen-btn text-3xl">&times;</button>
+                <button class="close-fullscreen-btn text-3xl p-2 hover:text-red-400 transition-colors">&times;</button>
             </header>
-            <main class="glass-card rounded-2xl flex-grow flex flex-col overflow-hidden">
-                 <div id="global-chat-messages" class="flex-grow p-4 overflow-y-auto text-sm"></div>
-                 <footer class="flex-shrink-0 p-3 bg-black/30 border-t border-white/10">
-                     <form id="global-chat-form" class="flex items-center gap-2">
-                         <input id="global-chat-input" type="text" maxlength="200" placeholder="اكتب رسالتك هنا..." class="flex-grow bg-gray-900/50 p-3 rounded-full text-sm text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none">
-                         <button type="submit" class="w-12 h-12 btn btn-success !rounded-full !p-0 flex items-center justify-center flex-shrink-0 btn-press-effect"><i class="fas fa-paper-plane"></i></button>
+            <main class="flex-grow flex flex-col overflow-hidden relative">
+                 <div id="global-chat-messages" class="flex-grow p-4 overflow-y-auto text-sm pb-20"></div>
+                 <footer class="flex-shrink-0 p-4 bg-black/60 border-t border-white/10 absolute bottom-0 left-0 right-0 backdrop-blur-md">
+                     <form id="global-chat-form" class="flex items-center gap-2 max-w-4xl mx-auto">
+                         <input id="global-chat-input" type="text" maxlength="200" placeholder="اكتب رسالتك هنا..." class="flex-grow bg-gray-800/80 p-4 rounded-full text-base text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none shadow-inner">
+                         <button type="submit" class="w-14 h-14 btn btn-success !rounded-full !p-0 flex items-center justify-center flex-shrink-0 btn-press-effect shadow-lg transform hover:scale-105 transition-transform"><i class="fas fa-paper-plane text-xl"></i></button>
                      </form>
                  </footer>
             </main>

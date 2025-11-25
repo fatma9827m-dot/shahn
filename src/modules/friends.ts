@@ -86,7 +86,11 @@ export const friendFunctions = {
             // Fallback function to display Last Seen from Firestore data
             const setOfflineStatus = () => {
                 const text = document.getElementById(`status-text-${friend.uid}`);
-                if (text) {
+                const dot = document.getElementById(`status-dot-${friend.uid}`);
+                if (text && dot) {
+                    dot.classList.remove('status-online');
+                    dot.classList.add('status-offline');
+                    
                     if (friend.lastLogin) {
                         const date = friend.lastLogin.toDate ? friend.lastLogin.toDate() : new Date(friend.lastLogin);
                         const now = new Date();
@@ -116,12 +120,14 @@ export const friendFunctions = {
                 const text = document.getElementById(`status-text-${friend.uid}`);
                 
                 if (dot && text) {
+                    // STRICT ONLINE CHECK
                     if (status && status.state === 'online') {
                         dot.classList.remove('status-offline');
                         dot.classList.add('status-online');
                         text.textContent = '🟢 متصل الآن';
                         text.className = 'text-xs text-green-400 font-bold';
                     } else {
+                        // Only calculate time if state is NOT online
                         dot.classList.remove('status-online');
                         dot.classList.add('status-offline');
                         
@@ -143,12 +149,11 @@ export const friendFunctions = {
                             text.textContent = `آخر ظهور: ${timeString}`;
                             text.className = 'text-xs text-gray-500 font-medium';
                         } else {
-                            setOfflineStatus(); // Fallback if online but no last_changed or data is null
+                            setOfflineStatus(); // Fallback
                         }
                     }
                 }
             }, (error: any) => {
-                // Permission denied or other error - fall back to Firestore data silently
                 setOfflineStatus();
             });
             
